@@ -7,6 +7,7 @@ workspace "Burnout3"
         kind "ConsoleApp"
         language "C++"
         cppdialect "C++17"
+        includedirs { "vendor/librw" }
         targetdir "bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
         objdir "bin-int/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
