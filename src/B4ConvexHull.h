@@ -3,15 +3,7 @@
 
 #include <cstdint>
 #include <vector>
-
-// Forward declarations for GtMathPs2 types (if needed for future member functions)
-namespace GtMathPs2 {
-    class Vector3;
-    class Plane;
-    class Matrix3x4; // Forward declaration
-    struct CGtLine; // Placeholder for line drawing parameters
-    struct CGtV4d;  // Placeholder for color or text parameters (Vector4 double?)
-}
+#include "GtMath.h"
 
 // Forward declare Debug Manager (assuming it's a class)
 class CB4DebugManager;
@@ -52,8 +44,8 @@ public:
     // Data storage using std::vector<uint8_t> to represent byte arrays
     // Sizes are based on the C struct's char arrays
     std::vector<uint8_t> m_faceData;    // size 68 in C struct (B4Face[4])
-    std::vector<uint8_t> m_planeData;   // size 224 in C struct (GtMathPs2::Plane[14])
-    std::vector<uint8_t> m_vertexData;  // size 256 in C struct (GtMathPs2::Vector3[16])
+    std::vector<uint8_t> m_planeData;   // size 224 in C struct (GtMath::Plane[14])
+    std::vector<uint8_t> m_vertexData;  // size 256 in C struct (GtMath::Vector3[16])
     std::vector<uint8_t> m_edgeData;    // size 56 in C struct (B4Edge[14])
     std::vector<uint8_t> m_deformData;  // size 200 in C struct (B4Deform[10])
 
@@ -79,26 +71,26 @@ public:
     // Member functions
     void Fixup();
     int64_t CalculatePlaneData(int planeIndex);
-    void MakeBoxFromBoundingBox(const GtMathPs2::Vector3& minBounds, const GtMathPs2::Vector3& maxBounds);
-    void MakeFromBoundingBox(const GtMathPs2::Vector3& minBounds, const GtMathPs2::Vector3& maxBounds, EB4HullShape hullShape);
-    void MakeConeFromBoundingBox(const GtMathPs2::Vector3& minBounds, const GtMathPs2::Vector3& maxBounds);
-    void MakeBoatFromBoundingBox(const GtMathPs2::Vector3& minBounds, const GtMathPs2::Vector3& maxBounds);
+    void MakeBoxFromBoundingBox(const GtMath::Vector3& minBounds, const GtMath::Vector3& maxBounds);
+    void MakeFromBoundingBox(const GtMath::Vector3& minBounds, const GtMath::Vector3& maxBounds, EB4HullShape hullShape);
+    void MakeConeFromBoundingBox(const GtMath::Vector3& minBounds, const GtMath::Vector3& maxBounds);
+    void MakeBoatFromBoundingBox(const GtMath::Vector3& minBounds, const GtMath::Vector3& maxBounds);
     bool DeformHullVerts(
-        GtMathPs2::Vector3* pOutAveragePos, // Can be nullptr
-        const GtMathPs2::Vector3& refPositionForAverageCalc,
-        const GtMathPs2::Matrix3x4& deformMatrix,
-        const GtMathPs2::Matrix3x4* pBoneMatrices, // Array of bone matrices
+        GtMath::Vector3* pOutAveragePos, // Can be nullptr
+        const GtMath::Vector3& refPositionForAverageCalc,
+        const GtMath::Matrix3x4& deformMatrix,
+        const GtMath::Matrix3x4* pBoneMatrices, // Array of bone matrices
         const B4ConvexHull& originalHull      // Undeformed hull
     );
     void MakePlanar();
-    void DebugRenderEdges(const GtMathPs2::Matrix3x4& worldTransform, bool drawText) const;
-    void DebugRenderPlanes(const GtMathPs2::Matrix3x4& worldTransform, bool drawText) const;
+    void DebugRenderEdges(const GtMath::Matrix3x4& worldTransform, bool drawText) const;
+    void DebugRenderPlanes(const GtMath::Matrix3x4& worldTransform, bool drawText) const;
     void InitialiseVehicleHull();
 
     // Placeholder for other member functions to be added later
     // For example:
-    // const GtMathPs2::Vector3* getVertices() const;
-    // const GtMathPs2::Plane* getPlanes() const;
+    // const GtMath::Vector3* getVertices() const;
+    // const GtMath::Plane* getPlanes() const;
     // ... other getters and utility functions
 };
 
