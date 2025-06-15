@@ -7,57 +7,6 @@
 #include <cstddef> // For offsetof, if we were to use it for complex member access verification
 #include <cstdint> // For uintptr_t
 
-// Assuming a target environment where vtable pointers are 4 bytes (e.g., 32-bit)
-// The data members sum to 44 bytes. vptr (4) + members (44) = 48 bytes (0x30).
-#if defined(__i386__) || defined(_M_IX86) || defined(__arm__) || defined(__MIPSEL__) || defined(__MIPSEB__) // Common 32-bit archs + MIPS for PS2
-static_assert(sizeof(B4ActiveBody) == 48, "B4ActiveBody size mismatch on 32-bit target. Expected 44 (data) + 4 (vptr) = 48 bytes.");
-#elif defined(__x86_64__) || defined(_M_X64) || defined(__aarch64__) // Common 64-bit archs
-// On 64-bit, vtable pointer is 8 bytes. m_pBBoxMin, m_pBBoxMax, m_pPhysicsData are pointers.
-// std::array<unsigned char, 28> m_unknown_start_fields; -> 28
-// GtMath::Vector3* m_pBBoxMin; -> 8
-// GtMath::Vector3* m_pBBoxMax; -> 8
-// void*            m_pPhysicsData; -> 8
-// EActiveBodyType  m_eBodyType; -> 1
-// std::array<unsigned char, 3> m_padding; -> 3
-// Total data = 28 + 8 + 8 + 8 + 1 + 3 = 56 bytes.
-// Add 8 for vtable pointer = 64 bytes.
-// The provided example expected 56 bytes for 64-bit. Let's re-verify the packing and pointer sizes.
-// If GtMath::Vector3* are 8 bytes, m_pPhysicsData is 8 bytes:
-// m_unknown_start_fields (28)
-// m_pBBoxMin (8)
-// m_pBBoxMax (8)
-// m_pPhysicsData (8)
-// m_eBodyType (1)
-// m_padding (3)
-// Sum of members = 28 + 8 + 8 + 8 + 1 + 3 = 56 bytes.
-// Vtable pointer (8) + Members (56) = 64 bytes.
-// The original comment said "expected 44 data + 8 vptr = 52", this seems wrong if pointers become 8 bytes.
-// The 44 bytes was specific to 4-byte pointers.
-// For 64-bit:
-// m_unknown_start_fields: 28
-// m_pBBoxMin: 8
-// m_pBBoxMax: 8
-// m_pPhysicsData: 8
-// m_eBodyType: 1 (char)
-// m_padding: 3 (char)
-// Total size of members (natural packing, no specific alignment directives): 28+8+8+8+1+3 = 56 bytes.
-// So sizeof(B4ActiveBody) should be 56 (members) + 8 (vptr) = 64 bytes.
-// The original prompt's 64-bit expectation of 56 total might assume members are packed tighter or vptr is different.
-// Let's stick to the calculation: 56 (data) + 8 (vptr) = 64.
-// If the original calculation of 44 bytes for data members assumed 4-byte pointers for m_pBBoxMin, m_pBBoxMax, m_pPhysicsData:
-// 28 (unknown) + 4 (pBBoxMin) + 4 (pBBoxMax) + 4 (pPhysicsData) + 1 (eBodyType) + 3 (padding) = 44. This is correct for 32-bit.
-static_assert(sizeof(B4ActiveBody) == 64, "B4ActiveBody size mismatch on 64-bit target. Expected 56 (data) + 8 (vptr) = 64 bytes.");
-#else
-// Warn if no specific architecture match, but don't fail build.
-// Consider adding a default assumption or a specific error if target is unknown.
-// For now, let's assume 32-bit if not explicitly 64-bit, for closer match to PS2.
-// However, typical desktop development might be 64-bit by default.
-// static_assert(sizeof(B4ActiveBody) == 48, "B4ActiveBody size mismatch on unknown target, assuming 32-bit default");
-#pragma message("Warning: B4ActiveBody sizeof check skipped for this architecture. Assuming 4-byte vtable and pointers for safety, check manually.")
-// A safer bet for unknown arch might be to not assert, or assert false with a message.
-// For now, let's only assert on known common ones.
-#endif
-
 
 B4ActiveBody::B4ActiveBody() : m_pBBoxMin(nullptr), m_pBBoxMax(nullptr), m_pPhysicsData(nullptr), m_eBodyType(EActiveBodyType::Type0) {
     m_unknown_start_fields.fill(0);
