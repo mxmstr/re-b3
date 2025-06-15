@@ -7,8 +7,6 @@
 // Forward declarations like CB4DebugManager and SomeGraphicsNamespace are omitted
 // as they are not part of this struct's definition.
 
-namespace Burnout4 {
-
 // Enum from original file
 enum class EB4HullShape {
     Box = 0,
@@ -118,5 +116,3 @@ public:
 // This matches the original C struct's sizeof.
 // The pointer members (pFaces, pPlanes, etc.) do not contribute to this size calculation
 // as they are for post-FixUp C++ access and are not part of the serialized layout.
-
-} // namespace Burnout4
