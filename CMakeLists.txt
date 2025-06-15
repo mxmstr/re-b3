@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # List of source files
 set(SOURCES
     src/GtIntersection.cpp
+    src/B4CollisionDetector.cpp
     # Add other .cpp files here if the project grows
 )
 
